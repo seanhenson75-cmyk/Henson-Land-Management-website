@@ -4,28 +4,51 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Henson AI</title>
-<meta name="description" content="Henson AI — intelligent cloud AI in your browser with no downloads.">
+<meta name="description" content="Henson AI — intelligent cloud AI in your browser.">
 <meta name="theme-color" content="#07111f">
 <style>
-*{box-sizing:border-box}body{margin:0;background:#07111f;color:#eef4ff;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}.shell{min-height:100vh;background:radial-gradient(circle at 20% 0%,rgba(44,123,255,.25),transparent 34%),radial-gradient(circle at 100% 15%,rgba(126,74,255,.22),transparent 28%),#07111f}.topbar{height:70px;padding:0 clamp(18px,5vw,70px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;background:rgba(7,17,31,.9);backdrop-filter:blur(14px);z-index:10}.logo{font-weight:900;font-size:22px;text-decoration:none;color:#fff}.logo span{color:#66a3ff}.topbar a{color:#b8c7df;text-decoration:none}.hero{max-width:1400px;margin:auto;padding:75px clamp(18px,7vw,100px) 45px}.badge{display:inline-block;padding:8px 12px;border-radius:999px;border:1px solid rgba(85,217,138,.28);background:rgba(85,217,138,.08);color:#a8e9c1;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.hero h1{font-size:clamp(52px,8vw,105px);line-height:.92;letter-spacing:-.06em;margin:22px 0}.hero p{max-width:760px;color:#aebbd0;font-size:20px;line-height:1.55}.chatwrap{max-width:1250px;margin:auto;padding:0 18px 80px}.chat{height:680px;border:1px solid rgba(255,255,255,.09);border-radius:20px;background:rgba(255,255,255,.035);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.25)}.head{padding:17px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center}.head small{display:block;color:#7f91ac;margin-top:3px}.status{color:#9fe2b7;font-size:13px;font-weight:800}.messages{padding:26px;overflow:auto}.welcome{max-width:680px;text-align:center;margin:95px auto 0}.welcome h2{font-size:44px;letter-spacing:-.04em;margin:0 0 10px}.welcome p{color:#8ea0bb;font-size:17px}.message{max-width:800px;margin:0 auto 15px;padding:14px 16px;border-radius:14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}.user{background:#1f6eea;margin-left:auto;max-width:75%}.ai{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07)}.error{background:rgba(255,91,91,.08);border:1px solid rgba(255,91,91,.25);color:#ffd1d1}.composer{margin:0 16px 16px;padding:9px;display:flex;gap:9px;background:#0b1728;border:1px solid rgba(255,255,255,.11);border-radius:15px}.composer textarea{flex:1;min-height:55px;max-height:145px;resize:none;background:transparent;border:0;outline:0;color:#fff;font:inherit;padding:9px}.composer button{border:0;border-radius:11px;padding:13px 19px;background:linear-gradient(135deg,#2c7bff,#7e4aff);color:#fff;font-weight:900;cursor:pointer;align-self:flex-end}.composer button:disabled{opacity:.5}.rules{max-width:1250px;margin:0 auto 90px;padding:0 18px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.rule{padding:25px;border:1px solid rgba(255,255,255,.08);border-radius:17px;background:rgba(255,255,255,.035)}.rule strong{font-size:19px}.rule p{color:#8fa0b9;line-height:1.5;margin-bottom:0}.footer{padding:30px;text-align:center;color:#627590;border-top:1px solid rgba(255,255,255,.07);font-size:13px}@media(max-width:700px){.hero{padding-top:55px}.hero h1{font-size:55px}.chat{height:72vh;min-height:570px}.messages{padding:17px}.welcome{margin-top:75px}.welcome h2{font-size:34px}.user{max-width:90%}.rules{grid-template-columns:1fr}.topbar>a:last-child{font-size:12px}}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#07111f;color:#eef4ff;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.shell{min-height:100vh;padding:18px;background:radial-gradient(circle at 20% 0%,rgba(44,123,255,.22),transparent 34%),radial-gradient(circle at 100% 15%,rgba(126,74,255,.20),transparent 28%),#07111f}
+.wrap{width:min(1100px,100%);margin:0 auto}
+.brand{display:flex;align-items:center;justify-content:space-between;padding:6px 4px 18px}
+.logo{font-size:24px;font-weight:900}.logo span{color:#66a3ff}
+.tagline{margin:6px 0 18px;font-size:clamp(24px,5vw,46px);font-weight:900;line-height:1.05;letter-spacing:-.035em}
+.chat{height:calc(100vh - 145px);min-height:560px;border:1px solid rgba(255,255,255,.09);border-radius:20px;background:rgba(255,255,255,.035);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.head{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center}
+.head strong{font-size:18px}.status{color:#9fe2b7;font-size:13px;font-weight:800}
+.messages{padding:20px;overflow:auto}
+.welcome{max-width:620px;text-align:center;margin:80px auto 0}.welcome h2{font-size:34px;margin:0 0 10px}.welcome p{color:#8ea0bb;margin:0}
+.message{max-width:800px;margin:0 auto 15px;padding:14px 16px;border-radius:14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.user{background:#1f6eea;margin-left:auto;max-width:80%}
+.ai{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07)}
+.error{background:rgba(255,91,91,.08);border:1px solid rgba(255,91,91,.25);color:#ffd1d1}
+.composer{margin:0 14px 14px;padding:9px;display:flex;gap:9px;background:#0b1728;border:1px solid rgba(255,255,255,.11);border-radius:15px}
+.composer textarea{flex:1;min-height:58px;max-height:160px;resize:none;background:transparent;border:0;outline:0;color:#fff;font:inherit;padding:10px}
+.composer button{border:0;border-radius:11px;padding:13px 20px;background:linear-gradient(135deg,#2c7bff,#7e4aff);color:#fff;font-weight:900;cursor:pointer;align-self:flex-end}
+.composer button:disabled{opacity:.5}
+@media(max-width:700px){.shell{padding:10px}.brand{padding:4px 2px 10px}.logo{font-size:20px}.tagline{font-size:28px;margin:4px 2px 12px}.chat{height:calc(100vh - 110px);min-height:520px}.messages{padding:14px}.welcome{margin-top:60px}.welcome h2{font-size:29px}.user{max-width:90%}.head{padding:14px}.composer{margin:0 10px 10px}.composer button{padding:12px 16px}}
 </style>
 </head>
-<body><div class="shell">
-<header class="topbar"><a class="logo" href="#">Henson <span>AI</span></a><a href="/">Henson Land Management</a></header>
-<section class="hero"><span class="badge">Cloud AI · No downloads</span><h1>Ask. Solve.<br>Keep moving.</h1><p>Henson AI uses a high-reasoning 120B cloud model for intelligent answers. It runs in the browser, uses no local GPU, requires no separate app, and has no paid AI fallback.</p></section>
-<main class="chatwrap"><section class="chat"><div class="head"><div><strong>Henson AI</strong><small>GPT‑OSS 120B · high reasoning · cloud hosted</small></div><span class="status" id="status">● Ready</span></div><div class="messages" id="messages"><div class="welcome"><h2>What can I help you with?</h2><p>Type below. Henson AI will use free cloud capacity only and stop when that free capacity is unavailable.</p></div></div><form class="composer" id="form"><textarea id="prompt" placeholder="Message Henson AI…" maxlength="8000"></textarea><button id="send" type="submit">Send</button></form></section></main>
-<section class="rules"><div class="rule"><strong>No downloads</strong><p>Henson AI stays a normal website. No Henson AI app, Puter app, Groq app, or other install is required.</p></div><div class="rule"><strong>Free cloud only</strong><p>The site calls only the configured Groq cloud endpoint. There is no second paid model or automatic paid fallback.</p></div><div class="rule"><strong>Hard stop at limit</strong><p>If Groq returns its rate-limit response, Henson AI stops and reports that free capacity is reached instead of trying paid capacity.</p></div></section>
-<footer class="footer">© 2026 Henson AI</footer></div>
+<body>
+<div class="shell">
+  <div class="wrap">
+    <div class="brand"><div class="logo">Henson <span>AI</span></div></div>
+    <div class="tagline">Don't just be smart, be as smart as a Henson.</div>
+    <section class="chat">
+      <div class="head"><strong>Ask Henson AI</strong><span class="status" id="status">● Ready</span></div>
+      <div class="messages" id="messages"><div class="welcome"><h2>What can I help you with?</h2><p>Ask anything below.</p></div></div>
+      <form class="composer" id="form"><textarea id="prompt" placeholder="Ask Henson AI…" maxlength="8000"></textarea><button id="send" type="submit">Send</button></form>
+    </section>
+  </div>
+</div>
 <script>
 const form=document.getElementById('form'),box=document.getElementById('prompt'),messages=document.getElementById('messages'),send=document.getElementById('send'),statusEl=document.getElementById('status');
 let history=[];
 function add(text,kind){const e=document.createElement('div');e.className='message '+kind;e.textContent=text;messages.appendChild(e);messages.scrollTop=messages.scrollHeight;return e}
 async function ask(){
-  const r=await fetch('/api/henson-ai',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({messages:history})
-  });
+  const r=await fetch('/api/henson-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history})});
   const data=await r.json().catch(()=>({}));
   if(r.status===429){const err=new Error(data.message||'Free cloud limit reached.');err.code='FREE_LIMIT';throw err}
   if(!r.ok){const err=new Error(data.message||'Cloud AI unavailable.');err.code=data.error||'CLOUD_ERROR';throw err}
@@ -45,7 +68,7 @@ form.addEventListener('submit',async e=>{
     wait.remove();add(answer,'ai');history.push({role:'assistant',content:answer});statusEl.textContent='● Ready';
   }catch(e){
     wait.remove();
-    if(e.code==='FREE_LIMIT')add('The free cloud AI limit has been reached. Henson AI stopped here and did not switch to paid capacity.','error');
+    if(e.code==='FREE_LIMIT')add('The free cloud AI limit has been reached. No paid fallback was used.','error');
     else if(e.code==='groq_not_configured')add('Henson AI cloud access still needs its secure Groq credential configured on the server.','error');
     else add('The free cloud AI is unavailable right now. No paid fallback was used.','error');
     statusEl.textContent='● Retry available';
@@ -53,5 +76,6 @@ form.addEventListener('submit',async e=>{
   }finally{send.disabled=false;box.focus()}
 });
 box.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
-</script></body></html>
-<!-- deployment refresh 2026-09-13 -->
+</script>
+</body>
+</html>
