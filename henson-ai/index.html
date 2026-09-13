@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Henson AI</title>
+<meta name="description" content="Henson AI — ask questions and get intelligent answers in your browser.">
+<meta name="theme-color" content="#07111f">
+<link rel="canonical" href="https://www.hensonlandmgmtllc.com/henson-ai/">
+<meta property="og:title" content="Henson AI">
+<meta property="og:description" content="Don't just be smart, be as smart as a Henson.">
+<meta property="og:url" content="https://www.hensonlandmgmtllc.com/henson-ai/">
+<meta property="og:type" content="website">
+<style>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#07111f;color:#eef4ff;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.shell{min-height:100vh;padding:18px;background:radial-gradient(circle at 16% 0%,rgba(44,123,255,.22),transparent 34%),radial-gradient(circle at 85% 12%,rgba(126,74,255,.18),transparent 30%),#07111f}
+.wrap{width:min(1380px,100%);margin:0 auto}
+.brand{display:flex;align-items:center;padding:6px 4px 16px}
+.logo{font-size:24px;font-weight:900}.logo span{color:#66a3ff}
+.tagline{margin:4px 0 18px 4px;font-size:clamp(24px,4vw,44px);font-weight:900;line-height:1.05;letter-spacing:-.035em;max-width:900px}
+.chat{width:min(900px,72vw);height:calc(100vh - 145px);min-height:560px;margin-left:0;border:1px solid rgba(255,255,255,.09);border-radius:20px;background:rgba(255,255,255,.035);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.head{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center}
+.head strong{font-size:18px}.status{color:#9fe2b7;font-size:13px;font-weight:800}
+.messages{padding:20px;overflow:auto}
+.welcome{max-width:560px;text-align:left;margin:70px 0 0 18px}.welcome h2{font-size:34px;margin:0 0 10px}.welcome p{color:#8ea0bb;margin:0}
+.message{max-width:760px;margin:0 0 15px;padding:14px 16px;border-radius:14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.user{background:#1f6eea;margin-left:0;max-width:78%}
+.ai{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07)}
+.error{background:rgba(255,91,91,.08);border:1px solid rgba(255,91,91,.25);color:#ffd1d1}
+.composer{margin:0 14px 14px;padding:9px;display:flex;gap:9px;background:#0b1728;border:1px solid rgba(255,255,255,.11);border-radius:15px}
+.composer textarea{flex:1;min-height:58px;max-height:160px;resize:none;background:transparent;border:0;outline:0;color:#fff;font:inherit;padding:10px}
+.composer button{border:0;border-radius:11px;padding:13px 20px;background:linear-gradient(135deg,#2c7bff,#7e4aff);color:#fff;font-weight:900;cursor:pointer;align-self:flex-end}
+.composer button:disabled{opacity:.5}
+@media(max-width:900px){.chat{width:100%;height:calc(100vh - 135px)}.welcome{margin-left:0;text-align:center}.message{margin-left:auto;margin-right:auto}.user{margin-left:auto}}
+@media(max-width:700px){.shell{padding:10px}.brand{padding:4px 2px 10px}.logo{font-size:20px}.tagline{font-size:28px;margin:4px 2px 12px}.chat{height:calc(100vh - 110px);min-height:520px}.messages{padding:14px}.welcome{margin-top:60px}.welcome h2{font-size:29px}.user{max-width:90%}.head{padding:14px}.composer{margin:0 10px 10px}.composer button{padding:12px 16px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="wrap">
+    <div class="brand"><div class="logo">Henson <span>AI</span></div></div>
+    <div class="tagline">Don't just be smart, be as smart as a Henson.</div>
+    <section class="chat">
+      <div class="head"><strong>Ask Henson AI</strong><span class="status" id="status">● Ready</span></div>
+      <div class="messages" id="messages"><div class="welcome"><h2>What can I help you with?</h2><p>Ask anything below.</p></div></div>
+      <form class="composer" id="form"><textarea id="prompt" placeholder="Ask Henson AI…" maxlength="8000"></textarea><button id="send" type="submit">Send</button></form>
+    </section>
+  </div>
+</div>
+<script>
+const form=document.getElementById('form'),box=document.getElementById('prompt'),messages=document.getElementById('messages'),send=document.getElementById('send'),statusEl=document.getElementById('status');
+let history=[];
+function add(text,kind){const e=document.createElement('div');e.className='message '+kind;e.textContent=text;messages.appendChild(e);messages.scrollTop=messages.scrollHeight;return e}
+async function ask(){
+  const r=await fetch('/api/henson-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history})});
+  const data=await r.json().catch(()=>({}));
+  if(r.status===429){const err=new Error(data.message||'Free cloud limit reached.');err.code='FREE_LIMIT';throw err}
+  if(!r.ok){const err=new Error(data.message||'Cloud AI unavailable.');err.code=data.error||'CLOUD_ERROR';throw err}
+  return data.answer;
+}
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const text=box.value.trim();
+  if(!text||send.disabled)return;
+  messages.querySelector('.welcome')?.remove();
+  add(text,'user');
+  history.push({role:'user',content:text});
+  box.value='';send.disabled=true;statusEl.textContent='● Thinking';
+  const wait=add('Thinking…','ai');
+  try{
+    const answer=await ask();
+    wait.remove();add(answer,'ai');history.push({role:'assistant',content:answer});statusEl.textContent='● Ready';
+  }catch(e){
+    wait.remove();
+    if(e.code==='FREE_LIMIT')add('The free cloud AI limit has been reached. No paid fallback was used.','error');
+    else if(e.code==='groq_not_configured')add('Henson AI cloud access still needs its secure cloud credential configured on the server.','error');
+    else add('Henson AI is unavailable right now.','error');
+    statusEl.textContent='● Retry available';
+    history=history.filter((m,i)=>!(i===history.length-1&&m.role==='user'));
+  }finally{send.disabled=false;box.focus()}
+});
+box.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
+</script>
+</body>
+</html>
