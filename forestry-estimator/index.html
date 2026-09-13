@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Henson Forestry Mulching Estimator</title>
+<meta name="description" content="Forestry mulching estimating tool by Henson Land Management." />
+<style>
+:root{--bg:#0f1411;--card:#171d19;--line:#2b352e;--text:#f2f5f2;--muted:#a9b2ab;--accent:#d9e7dc;--btn:#e9efe9;--btntext:#101410}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#0c100d,#111713 35%,#0f1411);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+.wrap{max-width:760px;margin:auto;padding:20px 16px 40px}.brand{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:#bcc6be;margin-bottom:6px}.title{font-size:30px;font-weight:800;line-height:1.05;margin:0 0 8px}.sub{color:var(--muted);margin:0 0 18px;line-height:1.5}
+.card{background:rgba(23,29,25,.96);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:620px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:13px;color:#c8d0ca;margin-bottom:6px;font-weight:700}input,select,textarea{width:100%;background:#0f1411;color:#fff;border:1px solid #364139;border-radius:12px;padding:13px 12px;font-size:16px;outline:none}textarea{min-height:92px;resize:vertical}input:focus,select:focus,textarea:focus{border-color:#7f9385}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}@media(max-width:520px){.actions{grid-template-columns:1fr}}button{border:0;border-radius:12px;padding:14px 16px;font-size:16px;font-weight:800;cursor:pointer}.primary{background:var(--btn);color:var(--btntext)}.secondary{background:#222a24;color:#fff;border:1px solid #374239}
+.result{font-size:36px;font-weight:900;margin:2px 0 6px}.muted{color:var(--muted)}.rows{margin-top:12px;border-top:1px solid var(--line)}.row{display:flex;justify-content:space-between;gap:18px;padding:10px 0;border-bottom:1px solid #222b25}.row span:last-child{font-weight:800;text-align:right}.foot{font-size:12px;color:#8f9992;text-align:center;margin-top:20px}.pill{display:inline-block;padding:5px 9px;border:1px solid #39443d;border-radius:999px;font-size:12px;color:#c7d0c9;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Henson Land Management</div>
+  <h1 class="title">Forestry Mulching Estimator</h1>
+  <p class="sub">Fast field pricing for acreage, mobilization, difficulty, and job notes.</p>
+  <div class="card">
+    <div class="grid">
+      <div><label for="acres">Acres</label><input id="acres" type="number" min="0" step="0.1" value="1"></div>
+      <div><label for="rate">Base price per acre ($)</label><input id="rate" type="number" min="0" step="50" value="2400"></div>
+      <div><label for="mobilization">Mobilization ($)</label><input id="mobilization" type="number" min="0" step="50" value="250"></div>
+      <div><label for="difficulty">Difficulty</label><select id="difficulty"><option value="1">Normal</option><option value="1.15">Heavy brush / vines (+15%)</option><option value="1.3">Very heavy / saplings (+30%)</option><option value="1.5">Extreme / slow going (+50%)</option></select></div>
+    </div>
+    <div style="margin-top:12px"><label for="notes">Job notes</label><textarea id="notes" placeholder="Access, slope, trees, creek, debris, special instructions..."></textarea></div>
+    <div class="actions"><button class="primary" onclick="calculate()">Calculate Estimate</button><button class="secondary" onclick="shareEstimate()">Share Estimate</button></div>
+  </div>
+  <div class="card" id="resultCard">
+    <div class="pill">Suggested quote</div>
+    <div class="result" id="quote">$2,650</div>
+    <div class="muted" id="summary">1.0 acre • Normal conditions</div>
+    <div class="rows">
+      <div class="row"><span>Acreage price</span><span id="acrePrice">$2,400</span></div>
+      <div class="row"><span>Difficulty adjustment</span><span id="difficultyPrice">$0</span></div>
+      <div class="row"><span>Mobilization</span><span id="mobPrice">$250</span></div>
+      <div class="row"><span>Minimum job price</span><span>$1,500</span></div>
+    </div>
+  </div>
+  <div class="foot">Henson Land Management • Forestry Mulching Estimator</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function money(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(Math.round(n));}
+function calc(){const acres=+$('acres').value||0, rate=+$('rate').value||0, mob=+$('mobilization').value||0, mult=+$('difficulty').value||1; const acreage=acres*rate; const difficultyAdd=acreage*(mult-1); const subtotal=acreage+difficultyAdd+mob; const quote=Math.max(1500,Math.ceil(subtotal/50)*50); return {acres,rate,mob,mult,acreage,difficultyAdd,quote};}
+function calculate(){const r=calc(); $('quote').textContent=money(r.quote); $('acrePrice').textContent=money(r.acreage); $('difficultyPrice').textContent=money(r.difficultyAdd); $('mobPrice').textContent=money(r.mob); $('summary').textContent=`${r.acres.toFixed(1)} acre${r.acres===1?'':'s'} • ${$('difficulty').options[$('difficulty').selectedIndex].text}`;}
+async function shareEstimate(){calculate(); const r=calc(); const notes=$('notes').value.trim(); const text=`Henson Land Management – Forestry Mulching Estimate\nSuggested quote: ${money(r.quote)}\nAcreage: ${r.acres.toFixed(1)}\nMobilization: ${money(r.mob)}${notes?`\nNotes: ${notes}`:''}`; if(navigator.share){try{await navigator.share({title:'Forestry Mulching Estimate',text});return}catch(e){}} try{await navigator.clipboard.writeText(text);alert('Estimate copied to clipboard.');}catch(e){alert(text)}}
+['acres','rate','mobilization','difficulty'].forEach(id=>$(id).addEventListener('input',calculate)); calculate();
+</script>
+</body>
+</html>
