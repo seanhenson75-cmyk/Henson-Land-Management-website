@@ -39,7 +39,7 @@ label{display:block;font-size:13px;color:#c8d0ca;margin-bottom:6px;font-weight:7
       <div class="row"><span>Acreage price</span><span id="acrePrice">$2,400</span></div>
       <div class="row"><span>Difficulty adjustment</span><span id="difficultyPrice">$0</span></div>
       <div class="row"><span>Mobilization</span><span id="mobPrice">$250</span></div>
-      <div class="row"><span>Minimum job price</span><span>$1,500</span></div>
+      <div class="row"><span>Total for job completed</span><span id="totalJob">$2,650</span></div>
     </div>
   </div>
   <div class="foot">Henson Land Management • Forestry Mulching Estimator</div>
@@ -48,8 +48,8 @@ label{display:block;font-size:13px;color:#c8d0ca;margin-bottom:6px;font-weight:7
 const $=id=>document.getElementById(id);
 function money(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(Math.round(n));}
 function calc(){const acres=+$('acres').value||0, rate=+$('rate').value||0, mob=+$('mobilization').value||0, mult=+$('difficulty').value||1; const acreage=acres*rate; const difficultyAdd=acreage*(mult-1); const subtotal=acreage+difficultyAdd+mob; const quote=Math.max(1500,Math.ceil(subtotal/50)*50); return {acres,rate,mob,mult,acreage,difficultyAdd,quote};}
-function calculate(){const r=calc(); $('quote').textContent=money(r.quote); $('acrePrice').textContent=money(r.acreage); $('difficultyPrice').textContent=money(r.difficultyAdd); $('mobPrice').textContent=money(r.mob); $('summary').textContent=`${r.acres.toFixed(1)} acre${r.acres===1?'':'s'} • ${$('difficulty').options[$('difficulty').selectedIndex].text}`;}
-async function shareEstimate(){calculate(); const r=calc(); const notes=$('notes').value.trim(); const text=`Henson Land Management – Forestry Mulching Estimate\nSuggested quote: ${money(r.quote)}\nAcreage: ${r.acres.toFixed(1)}\nMobilization: ${money(r.mob)}${notes?`\nNotes: ${notes}`:''}`; if(navigator.share){try{await navigator.share({title:'Forestry Mulching Estimate',text});return}catch(e){}} try{await navigator.clipboard.writeText(text);alert('Estimate copied to clipboard.');}catch(e){alert(text)}}
+function calculate(){const r=calc(); $('quote').textContent=money(r.quote); $('acrePrice').textContent=money(r.acreage); $('difficultyPrice').textContent=money(r.difficultyAdd); $('mobPrice').textContent=money(r.mob); $('totalJob').textContent=money(r.quote); $('summary').textContent=`${r.acres.toFixed(1)} acre${r.acres===1?'':'s'} • ${$('difficulty').options[$('difficulty').selectedIndex].text}`;}
+async function shareEstimate(){calculate(); const r=calc(); const notes=$('notes').value.trim(); const text=`Henson Land Management – Forestry Mulching Estimate\nTotal for job completed: ${money(r.quote)}\nAcreage: ${r.acres.toFixed(1)}\nMobilization: ${money(r.mob)}${notes?`\nNotes: ${notes}`:''}`; if(navigator.share){try{await navigator.share({title:'Forestry Mulching Estimate',text});return}catch(e){}} try{await navigator.clipboard.writeText(text);alert('Estimate copied to clipboard.');}catch(e){alert(text)}}
 ['acres','rate','mobilization','difficulty'].forEach(id=>$(id).addEventListener('input',calculate)); calculate();
 </script>
 </body>
