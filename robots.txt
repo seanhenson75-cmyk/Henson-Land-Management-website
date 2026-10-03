@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://www.hensonlandmgmtllc.com/sitemap.xml
+Sitemap: https://www.hensonlandmgmtllc.com/sitemap-services.xml
