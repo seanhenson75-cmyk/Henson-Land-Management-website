@@ -1,0 +1,49 @@
+name: Publish uploaded project photos
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-project-photos.yml'
+      - '*.heic'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  convert-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install Pillow pillow-heif
+      - name: Convert HEIC images and add gallery
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          from pillow_heif import register_heif_opener
+          register_heif_opener()
+          names=['IMG_20261009_092059','IMG_20261008_155442','IMG_20261008_155509']
+          Path('img').mkdir(exist_ok=True)
+          for name in names:
+              source=Path(name+'.heic')
+              if not source.exists(): continue
+              with Image.open(source) as im:
+                  im.convert('RGB').save(Path('img')/(name+'.jpg'), 'JPEG', quality=86, optimize=True)
+          gallery='<section class="section" style="background:#f0ede5"><h2>More Real Project Photos</h2><p>Additional photos from our recent property clearing work, showing different views of the site.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:18px;max-width:1100px">'+''.join('<figure style="margin:0"><img src="/img/'+n+'.jpg" alt="Henson Land Management property clearing project photo" loading="lazy" style="width:100%;height:auto;border-radius:8px"><figcaption>Property clearing project view</figcaption></figure>' for n in names)+'</div></section>'
+          for page in ['forestry-mulching/index.html','pond-creek-bank-clearing/index.html']:
+              p=Path(page)
+              html=p.read_text()
+              if 'More Real Project Photos' not in html:
+                  html=html.replace('</main>',gallery+'</main>')
+                  p.write_text(html)
+          PY
+      - name: Commit converted photos and galleries
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add img/*.jpg forestry-mulching/index.html pond-creek-bank-clearing/index.html
+          git diff --cached --quiet || (git commit -m "Publish converted customer project photos on service pages" && git push)
