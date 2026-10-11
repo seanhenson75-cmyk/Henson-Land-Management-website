@@ -1,0 +1,36 @@
+name: Convert waterfront HEIC photos to JPEG
+on:
+  push:
+    paths:
+      - '.github/workflows/convert-waterfront-photos.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pillow pillow-heif
+      - name: Convert original photos
+        run: |
+          python - <<'PY'
+          from PIL import Image, ImageOps
+          from pillow_heif import register_heif_opener
+          register_heif_opener()
+          files = ['IMG_20261008_155442', 'IMG_20261008_155509', 'IMG_20261009_092059']
+          for name in files:
+              with Image.open(name+'.heic') as image:
+                  rgb=ImageOps.exif_transpose(image).convert('RGB')
+                  rgb.save(name+'.jpg',format='JPEG',quality=88,optimize=True)
+                  print(name+'.jpg',rgb.size)
+          PY
+      - name: Commit browser-friendly JPEG images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add IMG_20261008_155442.jpg IMG_20261008_155509.jpg IMG_20261009_092059.jpg
+          git diff --cached --quiet || (git commit -m "Convert waterfront HEIC photos to browser-friendly JPEG" && git push)
