@@ -1,4 +1,9 @@
 (function () {
+  var pendingHash = location.hash ? decodeURIComponent(location.hash.slice(1)) : "";
+  if (location.hash) {
+    history.replaceState(null, "", location.pathname + location.search);
+  }
+
   function prefersReducedMotion() {
     return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
@@ -54,21 +59,20 @@
     stripHash();
   }
 
-  function scrollFromLoadHash() {
-    var hash = location.hash;
-    if (!hash) return;
-    var id = decodeURIComponent(hash.slice(1));
-    scrollToId(id);
-    stripHash();
+  function scrollPendingHash() {
+    if (pendingHash) scrollToId(pendingHash);
   }
 
   document.addEventListener("click", onHashLinkClick);
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
-      requestAnimationFrame(scrollFromLoadHash);
+      requestAnimationFrame(scrollPendingHash);
     });
   } else {
-    requestAnimationFrame(scrollFromLoadHash);
+    requestAnimationFrame(scrollPendingHash);
   }
+  window.addEventListener("load", function () {
+    requestAnimationFrame(scrollPendingHash);
+  });
 })();
