@@ -39,7 +39,7 @@ jobs:
               parts = sorted(staging.glob(rec['name'] + '.part*.b64'))
               if len(parts) != rec['parts']:
                   sys.exit(f"{rec['name']}: expected {rec['parts']} parts, found {len(parts)}")
-              b64 = ''.join(part.read_text().split() for part in parts)
+              b64 = ''.join(part.read_text().strip() for part in parts)
               data = base64.b64decode(b64, validate=True)
               digest = hashlib.sha256(data).hexdigest()
               if len(data) != rec['bytes'] or digest != rec['sha256']:
