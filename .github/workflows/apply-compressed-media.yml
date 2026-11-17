@@ -39,7 +39,7 @@ jobs:
               parts = sorted(staging.glob(rec['name'] + '.part*.b64'))
               if len(parts) != rec['parts']:
                   sys.exit(f"{rec['name']}: expected {rec['parts']} parts, found {len(parts)}")
-              b64 = ''.join(p.read_text().split())
+              b64 = ''.join(part.read_text().split() for part in parts)
               data = base64.b64decode(b64, validate=True)
               digest = hashlib.sha256(data).hexdigest()
               if len(data) != rec['bytes'] or digest != rec['sha256']:
@@ -47,8 +47,8 @@ jobs:
               dest.parent.mkdir(parents=True, exist_ok=True)
               dest.write_bytes(data)
               written.append(f"{dest} {len(data)} {digest}")
-          Path('/tmp/written.txt').write_text('\n'.join(written) + '\n')
-          print('\n'.join(written))
+          Path('/tmp/written.txt').write_text(chr(10).join(written) + chr(10))
+          print(chr(10).join(written))
           PY
       - name: Commit replacements and remove staging
         run: |
