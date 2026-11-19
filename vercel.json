@@ -7,6 +7,18 @@
       "destination": "/index.html"
     }
   ],
+  "redirects": [
+    {
+      "source": "/septic-installation",
+      "destination": "/septic/",
+      "permanent": true
+    },
+    {
+      "source": "/septic-installation/",
+      "destination": "/septic/",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
